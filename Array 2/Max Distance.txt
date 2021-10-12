@@ -1,0 +1,75 @@
+/*
+Max Distance
+Problem Description
+
+Given an array A of integers of size N. Find the maximum of value of j - i such that A[i] <= A[j].
+
+
+
+Problem Constraints
+1 <= N <= 1000000
+
+-109 <= A[i] <= 109
+
+
+
+Input Format
+First argument is an integer array A of size N.
+
+
+
+Output Format
+Return an integer denoting the maximum value of j - i.
+
+
+
+Example Input
+Input 1:
+
+A = [3, 5, 4, 2]
+
+
+Example Output
+Output 1:
+
+2
+
+
+Example Explanation
+Explanation 1:
+
+For A[0] = 3 and A[2] = 4, the ans is (2 - 0) = 2. 
+*/
+
+
+int Solution::maximumGap(const vector<int> &A) {
+    int n=A.size();
+    vector<int> right(n,0);
+    vector<int> left(n,0);
+    
+    left[0]=A[0];
+    for(int i=1;i<n;i++)
+    {
+        left[i]=min(left[i-1],A[i]);
+    }
+    
+    right[n-1]=A[n-1];
+    for(int i=n-2;i>=0;i--)
+    {
+        right[i]=max(right[i+1],A[i]);
+    }
+    
+    int i=0,j=0;
+    int ans=INT_MIN;
+    while(i<n && j<n)
+    {
+        if(left[i]<=right[j])
+        {
+            ans=max(ans,j-i);
+            j++;
+        }
+        else
+            i++;
+    }
+    return ans;
+}

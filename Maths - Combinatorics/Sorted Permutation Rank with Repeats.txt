@@ -1,0 +1,123 @@
+/*
+Sorted Permutation Rank with Repeats
+
+
+
+Example Output
+
+Output 1:
+
+ 2
+Output 2:
+
+ 4
+
+
+Example Explanation
+
+Explanation 1:
+
+ The order permutations with letters 'a', 'a', and 'b' :
+    aab
+    aba 
+    baa
+ So, the rank is 2.
+Explanation 2:
+
+ The order permutations with letters 'a', 'b', and 'c' :
+    abc
+    acb 
+    bac
+    bca
+    cab
+    cba
+ So, the rank is 4.
+ 
+ */
+ 
+ 
+ /*
+    Let sat we have string “settLe”. 
+    It has repetition(2 ‘e’ and 2 ‘t’) as well as upper case letter(‘L’). 
+    Total 6 characters and the total number of permutations are 6!/(2!*2!). 
+    
+    Now there are 3 characters(2 ‘e’ and 1 ‘L’) on the right side of ‘s’ which come before ‘s’ lexicographically. 
+    If there were no repetition then there would be 3*5! smaller strings which have the first character less than ‘s’. 
+    But starting from position 0, till the end there are 2 ‘s’ and 2 ‘t'(i.e. repetitions). 
+    Hence, the number of possible smaller permutations with the first letter smaller than ‘s’ are (3*5!)/(2!*2!). 
+    
+    Similarly, if we fix ‘s’ and look at the letters from index 1 to end then there is 1 character(‘L’) lexicographically less than ‘e’. 
+    And starting from position 1 there are 2 repeated characters(2 ‘e’ and 2 ‘t’). 
+    Hence, the number of possible smaller permutations with first letter ‘s’ and second letter smaller than ‘e’ are (1*4!)/(2!*2!).
+    
+    
+    Number of permutation with a character s as the first character.
+    number of permutation possible with remaining N-1 character = (N-1)! / (p1! * p2! * p3! ... ) 
+    where p1, p2, p3 are the number of occurrences of repeated characters.
+    
+    Now, there is a slight problem. (N-1)! / (p1! * p2! * p3! ... ) does not necessarily fit in an integer. 
+    It is easy to calculate (N-1)! % MOD. However, how do we handle divisions ? 
+    Modular_multiplicative_inverse is what you are looking for. In short,
+
+    (1/A) % MOD = A ^ (MOD - 2) % MOD
+    
+    We have used fastExponential methodn for this.
+    
+    Also since it has both smaller and capital letters , we have used array of size 123 to represent all characters as 'z => 122'
+*/
+
+long long int fastExp(long long int a, long long int b, long long int c)
+{
+    if(b==0)
+        return 1;
+
+    if(b%2==0)
+    {
+        return fastExp((a*a)%c, b/2, c);
+    }
+    else
+    {
+        return (a*fastExp((a*a)%c, (b-1)/2, c))%c;
+    }
+}
+
+int Solution::findRank(string A) {
+    int n=A.length();
+    vector<int> freqArray(123,0);
+    for(int i=0;i<n;i++)
+    {
+        freqArray[A[i]]++;
+    }
+    
+    int m= 1000003; 
+    long long int fact[n+1];
+    fact[0]=1;
+    for(int i=1;i<=n;i++)
+    {
+        fact[i]=(i *fact[i-1])%m;
+    }
+    
+    long long int ans=0;
+    
+    for(int i=0;i<n;i++)
+    {
+        int countless=0;
+        for(int j=A[i]-1;j>=0;j--)
+        {
+            countless+=freqArray[j];
+        }
+        
+        long long int deno=1;
+        for(int j=0;j<123;j++)
+        {
+            deno= (deno * fact[freqArray[j]])%m;
+        }
+        //cout<<"For "<<i<<" "<<countless<<endl;
+        freqArray[A[i]]--;
+        if(countless > 0)
+            ans= (ans+ ((countless*fact[n-i-1])%m * fastExp(deno, m-2, m))%m)%m;
+    }
+    
+    ans= (ans+1)%m;
+    return ans;
+}

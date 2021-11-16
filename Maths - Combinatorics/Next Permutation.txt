@@ -1,0 +1,94 @@
+/*
+Next Permutation
+
+
+
+
+Input Format
+
+The first and the only argument of input has an array of integers, A.
+
+
+
+Output Format
+
+Return an array of integers, representing the next permutation of the given array.
+
+
+
+Example Input
+
+Input 1:
+
+ A = [1, 2, 3]
+Input 2:
+
+ A = [3, 2, 1]
+
+
+Example Output
+
+Output 1:
+
+ [1, 3, 2]
+Output 2:
+
+ [1, 2, 3]
+
+
+Example Explanation
+
+Explanation 1:
+
+ Next permutaion of [1, 2, 3] will be [1, 3, 2].
+Explanation 2:
+
+ No arrangement is possible such that the number are arranged into the numerically next greater permutation of numbers.
+ So will rearranges it in the lowest possible order.
+
+
+*/
+
+vector<int> Solution::nextPermutation(vector<int> &A) {
+    int n=A.size();
+    int i=n-2;
+    
+    //Start from the right and find the first digit that is smaller than the digit next to it.
+    //skipp if greater
+    while(A[i] > A[i+1])
+    {
+        i--;
+    }
+    
+    /* If no such digit is found, then all digits are in descending order
+       means there cannot be a greater number with same set of digits
+	   In that case we just reverse the string as said in the question */
+    if(i<0)
+    {
+        reverse(A.begin(),A.end());
+        return A;
+    }
+    
+    
+    
+    int j=i+1;
+    int comp=INT_MAX;
+    int index=-1;
+    while(j<n)
+    {
+        if(A[j] > A[i])
+        {
+            if(A[j] < comp)
+            {
+                comp=A[j];
+                index=j;
+            }
+        }
+        j++;
+    }
+    
+    swap(A[i],A[index]);
+    sort(A.begin()+i+1,A.end());
+    return A;
+    
+}

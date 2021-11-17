@@ -1,0 +1,106 @@
+/*
+Single Number II
+
+Problem Description
+
+Given an array of integers, every element appears thrice except for one which occurs once.
+
+Find that element which does not appear thrice.
+
+NOTE: Your algorithm should have a linear runtime complexity.
+
+Could you implement it without using extra memory?
+
+
+
+
+Problem Constraints
+
+2 <= A <= 5*106
+
+0 <= A <= INTMAX
+
+
+
+Input Format
+
+First and only argument of input contains an integer array A.
+
+
+
+Output Format
+
+Return a single integer.
+
+
+
+Example Input
+
+Input 1:
+
+ A = [1, 2, 4, 3, 3, 2, 2, 3, 1, 1]
+Input 2:
+
+ A = [0, 0, 0, 1]
+
+
+Example Output
+
+Output 1:
+
+ 4
+Output 2:
+
+ 1
+
+
+Example Explanation
+
+Explanation 1:
+
+ 4 occurs exactly once in Input 1.
+ 1 occurs exactly once in Input 2.
+ */
+ 
+ /*
+    7 => 1 1 1
+    6 => 1 1 0
+    7 => 1 1 1
+    6 => 1 1 0
+    5 => 1 0 1
+    7 => 1 1 1
+    6 => 1 1 0
+    
+    if we look at binary representaion of these number, we see every unique number occuring 3 times will give 3 ith bit set or unset
+    and the other number will give only 1 ith bit set or unset.
+    
+    so if count of each ith bit is either multiple of 3 or not.
+    if they are not .that means this bit is set in number occured single time.
+    So we set it in our answer as well.
+*/
+int Solution::singleNumber(const vector<int> &A) {
+    int n=A.size();
+    int ma=A[0];
+    for(int i=1;i<n;i++)
+    {
+        ma=max(ma,A[i]);
+    }
+    
+    int bits=log2(ma+1);
+    
+    int ans=0;
+    for(int i=0;i<=bits;i++)
+    {
+        int countBits=0;
+        for(int j=0;j<n;j++)
+        {
+            if(A[j] & (1<<i))
+            {
+                countBits++;
+            }
+        }
+        if(countBits%3!=0)
+            ans|= (1<<i);
+    }
+    return ans;
+}

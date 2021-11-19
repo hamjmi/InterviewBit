@@ -1,0 +1,102 @@
+/*
+Single Number III
+
+Problem Description
+
+Given an array of numbers A , in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once.
+
+Note: Output array must be sorted.
+
+
+
+Problem Constraints
+
+2 <= |A| <= 100000
+1 <= A[i] <= 109
+
+
+
+Input Format
+
+First argument is an array of interger of size N.
+
+
+
+Output Format
+
+Return an array of two integers that appear only once.
+
+
+
+Example Input
+
+Input 1:
+
+A = [1, 2, 3, 1, 2, 4]
+Input 2:
+
+A = [1, 2]
+
+
+Example Output
+
+Output 1:
+
+[3, 4]
+Output 2:
+
+[1, 2]
+
+
+Example Explanation
+
+Explanation 1:
+
+ 3 and 4 appear only once.
+Explanation 2:
+
+ 1 and 2 appear only once.
+ */
+ 
+ /*
+    when xor of all numbers , then the result contains xor of a and b.
+    now we find the first set bit in above answer, it means that bit is present in one of 2 numbers.
+    
+    we want to use this bit to separate numbers who has these set and who doesn't.
+    we will use mask with just have this set bit by
+    int mask= axorb^((axorb)&(axorb-1));
+    
+    we know one number in is first grp and second in other grp 
+    
+    now if we xor numbers which has this bit set and not not , then other numbers will cancel itself in their group.
+    
+*/
+
+vector<int> Solution::solve(vector<int> &A) {
+    int n=A.size();
+    int axorb=0;
+    
+    //xor of all no, basically xor of numbers which occured single time.
+    for(int i=0;i<n;i++)
+    {
+        axorb^=A[i];
+    }
+    
+    //first set bit as mask
+    int mask= axorb^((axorb)&(axorb-1));
+    
+    int a=0,b=0;
+    for(int i=0;i<n;i++)
+    {
+        if(mask & A[i])
+            a^=A[i];
+        else
+            b^=A[i];
+    }
+    
+    vector<int> ans;
+    ans.push_back(min(a,b));
+    ans.push_back(max(a,b));
+    return ans;
+}
+

@@ -1,0 +1,131 @@
+/*
+Divide Integers
+
+Problem Description
+
+Divide two integers without using multiplication, division and mod operator.
+
+Return the floor of the result of the division.
+
+Also, consider if there can be overflow cases i.e output is greater than INT_MAX, return INT_MAX.
+
+NOTE: INT_MAX = 2^31 - 1
+
+
+
+Problem Constraints
+
+-231 <= A, B <= 231-1
+
+B!= 0
+
+
+
+Input Format
+
+First argument is an integer A denoting the dividend.
+Second argument is an integer B denoting the divisor.
+
+
+
+Output Format
+
+Return an integer denoting the floor value of the division.
+
+
+
+Example Input
+
+Input 1:
+
+ A = 5
+ B = 2
+Input 2:
+
+ A = 7
+ B = 1
+
+
+Example Output
+
+Output 1:
+
+ 2
+Output 2:
+
+ 7
+
+
+Example Explanation
+
+Explanation 1:
+
+ floor(5/2) = 2
+ */
+ 
+ /*
+    if we want to find quotient when we divide 43/8, we essentially find: 
+    43 - x*8 >=0
+    where x=> quotient
+    
+    Here x can be expressed as power of 2.
+    So we find the highest power of 2 that is true for above equation.
+    
+    so x = 2^2, right ?
+    
+    43 - 4*8 >= 0
+    43 - 32 >=0
+    11 >= 0
+    
+    so initial quotient is 2^2 i.e 4
+    and our divident becomes 11.
+    
+    now we find 11- x*8 >=0 
+    we find x as 2^1 as 11- 1*8 >=0
+    i.e 3 >=0
+    
+    so quotient becomes 2^2 + 2^0 => 4+1 => 5
+    and remainder is 3;
+    
+    also 43/8 => 5 .
+    so this is the way to go.
+    
+    also since both divident and divisor can be -ve as well.
+    so we find the overall sign i.e if anyone of the 2 is -ve , then answer would be -ve.
+    so if(sign< 0 ) => q=-q;
+    and
+    
+    if( q > INT_MAX || q< INT_MIN)
+        return INT_MAX;
+*/
+
+
+int Solution::divide(int A, int B) {
+    long long int n=A;
+    long long int m=B;
+    
+    int sign= n<0 ^ m<0 ? -1 : 1 ;// if one of them is -ve , then sign is -ve;
+    
+    n= abs(n);
+    m= abs(m);
+    
+    long long int t= 0;
+    long long int q= 0;
+    
+    for(long long int i=31;i>=0;i--)
+    {
+        if(t + (m<<i) <= n)
+        {
+            
+            t+= (m<<i);
+            q|= (1LL << i);
+        }
+    } 
+    if(sign<0)
+        q=-q;
+        
+    if( q > INT_MAX || q< INT_MIN)
+        return INT_MAX;
+    
+    return q;
+}

@@ -1,0 +1,120 @@
+/*
+ Palindrome Partitioning
+ 
+ Problem Description
+
+Given a string A, partition A such that every string of the partition is a palindrome.
+
+Return all possible palindrome partitioning of A.
+
+Ordering the results in the answer : Entry i will come before Entry j if :
+len(Entryi[0]) < len(Entryj[0]) OR
+(len(Entryi[0]) == len(Entryj[0]) AND len(Entryi[1]) < len(Entryj[1])) OR * * *
+(len(Entryi[0]) == len(Entryj[0]) AND ... len(Entryi[k] < len(Entryj[k]))
+
+
+Problem Constraints
+
+1 <= len(A) <= 15
+
+
+
+Input Format
+
+First argument is a string A of lowercase characters.
+
+
+
+Output Format
+
+Return a list of all possible palindrome partitioning of s.
+
+
+
+Example Input
+
+Input 1:
+
+A = "aab"
+Input 2:
+
+A = "a"
+
+
+Example Output
+
+Output 1:
+
+ [
+    ["a","a","b"]
+    ["aa","b"],
+  ]
+Output 2:
+
+ [
+    ["a"]
+  ]
+
+
+Example Explanation
+
+Explanation 1:
+
+In the given example, ["a", "a", "b"] comes before ["aa", "b"] because len("a") < len("aa").
+Explanation 2:
+
+In the given example, only partition possible is "a" .
+*/
+
+vector<vector<string> > finalList;
+
+void permute(string A, int index, string chosen, vector<string> &list, int count)
+{
+	
+	if (index == A.length())
+	{
+		
+		if (count == index)
+		{
+			/*for (int i = 0; i < list.size(); i++)
+			{
+				cout << list[i] << " ";
+			}
+			cout << endl;*/
+
+			finalList.push_back(list);
+		}
+		return;
+	}
+
+	chosen += A[index];
+	string rev = chosen;
+	reverse(rev.begin(), rev.end());
+	if (rev.compare(chosen) == 0)
+	{
+		list.push_back(chosen);
+		count += chosen.length();
+		chosen = "";
+		permute(A, index + 1, chosen, list, count);
+		chosen = list[list.size() - 1];
+		list.pop_back();
+		count -= chosen.length();
+	}
+	permute(A, index + 1, chosen, list, count);
+}
+
+vector<vector<string> > Solution::partition(string A) {
+    // Do not write main() function.
+    // Do not read input, instead use the arguments to the function.
+    // Do not print the output, instead return values as specified
+    // Still have a doubt. Checkout www.interviewbit.com/pages/sample_codes/ for more details
+    
+    vector<string> list;
+	int index = 0;
+	string chosen = "";
+	int count = 0;
+    finalList.clear();
+	permute(A, index,chosen, list, count);
+	
+	return finalList;
+}

@@ -1,0 +1,107 @@
+/*
+Generate all Parentheses II
+
+Problem Description
+
+Given an integer A pairs of parentheses, write a function to generate all combinations of well-formed parentheses of length 2*A.
+
+
+
+Problem Constraints
+
+1 <= A <= 20
+
+
+
+Input Format
+
+First and only argument is integer A.
+
+
+
+Output Format
+
+Return a sorted list of all possible paranthesis.
+
+
+
+Example Input
+
+Input 1:
+
+A = 3
+Input 2:
+
+A = 1
+
+
+Example Output
+
+Output 1:
+
+[ "((()))", "(()())", "(())()", "()(())", "()()()" ]
+Output 2:
+
+[ "()" ]
+
+
+Example Explanation
+
+Explanation 1:
+
+ All paranthesis are given in the output list.
+Explanation 2:
+
+ All paranthesis are given in the output list.
+ */
+ 
+ 
+vector<string> finalList;
+
+void generateParenthesisHelper(int left, int right, int A, string chosen)
+{
+	
+	if (left > A || right > A)
+		return;
+
+	if (left == A && right == A)
+	{
+		
+		//cout << chosen << endl;
+		finalList.push_back(chosen);
+		return;
+	}
+
+	if (left == right)
+	{
+		chosen += '(';
+		generateParenthesisHelper(left + 1, right, A, chosen);
+		chosen.erase(chosen.length() - 1, 1);
+	}
+	else if (left == A)
+	{
+		chosen += ")";
+		generateParenthesisHelper(left , right+1, A, chosen);
+		chosen.erase(chosen.length() - 1, 1);
+	}
+	else if (left > right)
+	{
+		chosen += '(';
+		generateParenthesisHelper(left + 1, right, A, chosen);
+		chosen.erase(chosen.length() - 1, 1);
+
+		chosen += ")";
+		generateParenthesisHelper(left, right + 1, A, chosen);
+		chosen.erase(chosen.length() - 1, 1);
+	}
+}
+
+vector<string> Solution::generateParenthesis(int A) {
+	finalList.clear();
+
+	generateParenthesisHelper(0, 0, A, "");
+
+	return finalList;
+}
+
+

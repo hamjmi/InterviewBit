@@ -1,0 +1,98 @@
+/*
+ Kth Smallest Element
+ 
+ 
+ Problem Description
+
+Find the Bth smallest element in given array A .
+
+NOTE: Users should try to solve it in <= B swaps.
+
+
+
+Problem Constraints
+
+1 <= |A| <= 100000
+
+1 <= B <= min(|A|, 500)
+
+1 <= A[i] <= 109
+
+
+
+Input Format
+
+First argument is vector A.
+
+Second argument is integer B.
+
+
+
+Output Format
+
+Return the Bth smallest element in given array.
+
+
+
+Example Input
+
+Input 1:
+
+A = [2, 1, 4, 3, 2]
+B = 3
+Input 2:
+
+A = [1, 2]
+B = 2
+
+
+Example Output
+
+Output 1:
+
+ 2
+Output 2:
+
+ 2
+
+
+Example Explanation
+
+Explanation 1:
+
+ 3rd element after sorting is 2.
+Explanation 2:
+
+ 2nd element after sorting is 2.
+ */
+ 
+ int Solution::kthsmallest(const vector<int> &A, int B) {
+    int l=A.size();
+    vector<int> vec;
+    for(int i=0;i<l;i++)
+    {
+        vec.push_back(A[i]);
+    }
+    
+    for(int i=0;i<B;i++)
+    {
+        int small=vec[i];
+        int k=-1;
+        for(int j=i+1;j<l;j++)
+        {
+            if(vec[j] < small)
+            {
+                small=vec[j];
+                k=j;
+            }
+        }
+        if(k!=-1)
+        {
+            swap(vec[i],vec[k]);
+        }
+    }
+    
+    
+    
+    return vec[B-1];
+}

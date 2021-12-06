@@ -1,0 +1,109 @@
+/*
+Inversion count in an array
+
+
+Problem Description
+Given an array of integers A. If i < j and A[i] > A[j] then the pair (i, j) is called an inversion of A. Find the total number of inversions of A modulo (109 + 7).
+
+
+
+Problem Constraints
+1 <= length of the array <= 100000
+
+1 <= A[i] <= 10^9
+
+
+
+Input Format
+The only argument given is the integer array A.
+
+
+
+Output Format
+Return the number of inversions of A modulo (109 + 7).
+
+
+
+Example Input
+Input 1:
+
+A = [3, 2, 1]
+Input 2:
+
+A = [1, 2, 3]
+
+
+Example Output
+Output 1:
+
+3
+Output 2:
+
+0
+
+
+Example Explanation
+Explanation 1:
+
+ All pairs are inversions.
+Explanation 2:
+
+ No inversions.
+ 
+ */
+ 
+ int m= 1000000007;
+long long int merge(vector<int> &A, int l, int k, int r)
+{
+    int i=l;
+    int j=k+1;
+    long long int count=0;
+    vector<int> temp(r-l+1);
+    int t=0;
+    while(i<=k && j<=r)
+    {
+        if(A[i] <= A[j])
+        {
+            temp[t++]=A[i++];
+        }
+        else
+        {
+            temp[t++]=A[j++];
+            count=(count + (k-i+1))%m;
+        }
+    }
+    
+    while(i<=k)
+    {
+        temp[t++]=A[i++];
+    }
+    while(j<=r)
+    {
+        temp[t++]=A[j++];
+    }
+    
+    for(int i=l;i<=r;i++)
+    {
+        A[i]=temp[i-l];
+    }
+    return count;
+}
+int mergeSort(vector<int> &A, int start, int end)
+{
+    if(start==end)
+        return 0;
+        
+    long long int mid= ((long long int)(end + start))/2;
+    int count=0;
+    count=(count + mergeSort(A, start, mid))%m;
+    count=(count + mergeSort(A, mid+1, end))%m;
+    count=(count + merge(A, start, mid, end))%m;
+    
+    return count;
+    
+}
+int Solution::solve(vector<int> &A) {
+    int n=A.size();
+    
+    return mergeSort(A, 0, n-1);
+}

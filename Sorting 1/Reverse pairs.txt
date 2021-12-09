@@ -1,0 +1,130 @@
+/* Reverse pairs
+
+
+Problem Description
+
+Given an array of integers A, we call (i, j) an important reverse pair if i < j and A[i] > 2*A[j].
+Return the number of important reverse pairs in the given array A.
+
+
+
+Problem Constraints
+
+1 <= length of the array <= 105
+
+-2 * 109 <= A[i] <= 2 * 109
+
+
+
+Input Format
+
+The only argument given is the integer array A.
+
+
+
+Output Format
+
+Return the number of important reverse pairs in the given array A.
+
+
+
+Example Input
+
+Input 1:
+
+ A = [1, 3, 2, 3, 1]
+Input 2:
+
+ A = [4, 1, 2]
+
+
+Example Output
+
+Output 1:
+
+ 2
+Output 2:
+
+ 1
+
+
+Example Explanation
+
+Explanation 1:
+
+ There are two pairs which are important reverse i.e (3, 1) and (3, 1).
+Explanation 2:
+
+ There is only one pair i.e (4, 1).
+ */
+ 
+ int merge(vector<int>& A, int low, int mid, int high)
+{
+	vector<int> temp(high - low + 1);
+	int i = low, j = mid+1;
+
+	int count = 0;
+	while (i <= mid && j <= high)
+	{
+		long long int first= (long long int)A[i];
+		long long int second=2*(long long int)A[j];
+		if (first >  second)
+		{
+			count += (mid - i + 1);
+			j++;
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	int k = 0;
+	i = low; j = mid + 1;
+	while (i <= mid && j <= high)
+	{
+		if (A[i] < A[j])
+		{
+			temp[k++] = A[i++];
+		}
+		else
+		{
+			temp[k++] = A[j++];
+		}
+	}
+
+	while (i <= mid)
+	{
+		temp[k++] = A[i++];
+	}
+
+	while (j <= high)
+	{
+		temp[k++] = A[j++];
+	}
+
+	for (int i = low; i <= high; i++)
+	{
+		A[i] = temp[i - low];
+	}
+
+	return count;
+}
+
+int mergesort(vector<int>& A, int low, int high)
+{
+	if (low >= high)
+		return 0;
+	int mid = (low + high) / 2;
+	int count = 0;
+	count+=mergesort(A, low, mid);
+	count+=mergesort(A, mid + 1, high);
+	count+=merge(A, low, mid, high);
+
+	return count;
+}
+
+int Solution::solve(vector<int> &A) {
+	return mergesort(A, 0, A.size() - 1);
+}
+

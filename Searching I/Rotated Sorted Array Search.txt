@@ -1,0 +1,146 @@
+/*
+Rotated Sorted Array Search
+
+Problem Description
+
+Given a sorted array of integers A of size N and an integer B.
+
+array A is rotated at some pivot unknown to you beforehand.
+
+(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2 ).
+
+You are given a target value B to search. If found in the array, return its index, otherwise return -1.
+
+You may assume no duplicate exists in the array.
+
+NOTE: Users are expected to solve this in O(log(N)) time.
+
+
+
+Problem Constraints
+
+1 <= N <= 1000000
+
+1 <= A[i] <= 10^9
+
+all elements in A are disitinct.
+
+
+
+Input Format
+
+The first argument given is the integer array A.
+
+The second argument given is the integer B.
+
+
+
+Output Format
+
+Return index of B in array A, otherwise return -1
+
+
+
+Example Input
+
+Input 1:
+
+A = [4, 5, 6, 7, 0, 1, 2, 3]
+B = 4
+Input 2:
+
+A = [1]
+B = 1
+
+
+Example Output
+
+Output 1:
+
+ 0
+Output 2:
+
+ 0
+
+
+Example Explanation
+
+Explanation 1:
+
+ 
+Target 4 is found at index 0 in A.
+Explanation 2:
+
+ 
+Target 1 is found at index 0 in A.
+
+*/
+
+int partition(const vector<int> &A)
+{
+    int low=0;
+    int high= A.size()-1;
+    int n=A.size();
+    int mid;
+    
+    while(low<=high)
+    {
+        mid=(low+high)/2;
+        if(mid > 0 && A[mid] < A[mid-1])
+        {
+            return mid;
+        }
+        else if(mid+1 < n && A[mid] > A[mid+1])
+        {
+            return mid+1;
+        }
+        
+        if(A[mid] > A[0])
+        {
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+    return -1;
+}
+int BS(const vector<int> &A, int B, int low, int high)
+{
+    int mid;
+    while(low<=high)
+    {
+        mid= (low+high)/2;
+        if(A[mid]==B)
+            return mid;
+        
+        if(A[mid] < B)
+        {
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+    return -1;
+}
+int Solution::search(const vector<int> &A, int B) {
+    
+    int n=A.size();
+    int k= partition(A);
+    if(k==-1)
+    {
+        return BS(A,B,0,n-1);
+    }
+    
+    int ans= BS(A,B,0,k-1);
+    if(ans==-1)
+    {
+        ans=BS(A,B,k,n-1);
+    }
+    
+    return ans;
+    
+}
